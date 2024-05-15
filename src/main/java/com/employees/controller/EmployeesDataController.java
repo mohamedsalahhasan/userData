@@ -57,15 +57,10 @@ public class EmployeesDataController {
     })
     @GetMapping("/employee/{employeeId}")
     public ResponseEntity<Response<EmployeeDto>>  getEmployee(@PathVariable Long employeeId){
-        try {
+
             Response<EmployeeDto> responseBody = employeesService.getEmployee(employeeId);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-        }catch (Exception e){
-            logger.error("error during get Employee",e);
-            Response<EmployeeDto> responseBody = new Response<>();
-            responseBody.setErrorMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
-        }
+
     }
     @Operation(summary =  "return Value representation for created Employee")
     @Parameters({
@@ -75,20 +70,10 @@ public class EmployeesDataController {
             @ApiResponse(responseCode ="500", description =  "something wrong during create employee")})
     @PostMapping("/Add-employee")
     public ResponseEntity<Response<String>> createEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto){
-        try {
+
              Response<String> responseBody = employeesService.createEmployee(employeeRequestDto);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-        }catch (BusinesstException e){
-            logger.error(Constant.ERROR_DURING_CREATE_EMPLOYEE,e);
-            Response<String> responseBody = new Response<>();
-            responseBody.setErrorMessage(e.getMessage());
-            return ResponseEntity.status(e.getHttpStatus()).body(responseBody);
-        }catch (Exception e){
-            logger.error(Constant.ERROR_DURING_CREATE_EMPLOYEE,e);
-            Response<String> responseBody = new Response<>();
-            responseBody.setErrorMessage(Constant.ERROR_DURING_CREATE_EMPLOYEE);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
-        }
+
     }
 
     @Operation(summary =  "Delete Employee by id")
@@ -99,39 +84,16 @@ public class EmployeesDataController {
             @ApiResponse(responseCode ="500", description =  "something wrong during delete employee")})
     @DeleteMapping("/delete-Employee/{employeeId}")
     public ResponseEntity<Response<String>> deleteEmployee(@PathVariable Long employeeId){
-        try {
+
             Response<String> responseBody = employeesService.deleteEmployee(employeeId);
             return ResponseEntity.status(HttpStatus.OK).body(responseBody);
-        }catch (BusinesstException e){
-            logger.error(Constant.ERROR_DURING_DELETE_EMPLOYEE,e);
-            Response<String> responseBody = new Response<>();
-            responseBody.setErrorMessage(e.getMessage());
-            return ResponseEntity.status(e.getHttpStatus()).body(responseBody);
-        }catch (Exception e){
-            logger.error(Constant.ERROR_DURING_DELETE_EMPLOYEE,e);
-            Response<String> responseBody = new Response<>();
-            responseBody.setErrorMessage(Constant.ERROR_DURING_DELETE_EMPLOYEE);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
-        }
+
 
     }
     @PutMapping("/edit-employee")
     public ResponseEntity<Response<EmployeeDto>> editEmployee(@Valid @RequestBody EmployeeRequestDto employeeRequestDto) {
-        try {
-
             Response<EmployeeDto> response = employeesService.editEmployee(employeeRequestDto);
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (BusinesstException e) {
-            logger.error(Constant.UPDATE_Employee_INTERNAL_SERVER_ERROR,e);
-            Response<EmployeeDto> response = new Response<>();
-            response.setErrorMessage(e.getMessage());
-            return ResponseEntity.status(e.getHttpStatus()).body(response);
-        } catch (Exception e) {
-            logger.error(Constant.UPDATE_Employee_INTERNAL_SERVER_ERROR,e);
-            Response<EmployeeDto> responseBody = new Response<>();
-            responseBody.setErrorMessage(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
-        }
     }
 
     }

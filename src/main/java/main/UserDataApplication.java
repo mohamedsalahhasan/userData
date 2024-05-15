@@ -7,9 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @EntityScan("com.Employees.*")
 @EnableJpaRepositories("com.Employees.*")
 @Configuration

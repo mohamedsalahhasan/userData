@@ -1,6 +1,9 @@
 package com.employees.Impl;
 
 
+import com.employees.exception.EmployeeAlreadyExistsException;
+import com.employees.exception.EmployeeGlobalException;
+import com.employees.exception.EmployeeNotFoundException;
 import com.employees.mapper.EmployeesMapper;
 import com.employees.dto.DepartmentDto;
 import com.employees.dto.EmployeeDto;
@@ -48,6 +51,9 @@ public class EmployeesServiceImpl implements EmployeesService {
         long startTime=System.currentTimeMillis();
         Response<EmployeeDto> response = new Response<>();
         EmployeesEntity  employeesEntity=employeesRepository.getEmployeesEntityById(employeeId);
+        if(employeesEntity==null){
+            throw new EmployeeNotFoundException(Constant.EMPLOYEE_NOT_FOUND_ERROR);
+        }
         EmployeeDto employeeDto=convertEmployeesEntityToDto(employeesEntity);
         response.setResult(employeeDto);
         logger.info("end get Employee, elapsedTime: {} ms",System.currentTimeMillis()-startTime);
@@ -72,8 +78,7 @@ public class EmployeesServiceImpl implements EmployeesService {
 
 
         if(employeeEntity ==null){
-            response.setErrorMessage(Constant.ERROR_DURING_CREATE_EMPLOYEE);
-            throw new BusinesstException(Constant.ERROR_DURING_CREATE_EMPLOYEE, HttpStatus.BAD_REQUEST);
+                throw new EmployeeAlreadyExistsException(Constant.ERROR_DURING_CREATE_EMPLOYEE);
         }
         response.setResult(Constant.EMPLOYEE_IS_CREATED);
         return response;
@@ -85,7 +90,7 @@ public class EmployeesServiceImpl implements EmployeesService {
         EmployeesEntity  employeesEntity=employeesRepository.getEmployeesEntityById(employeeId);
         logger.info("Employee is Null : {}",employeesEntity == null);
         if (employeesEntity == null ) {
-            throw new BusinesstException(Constant.EMPLOYEE_NOT_FOUND_ERROR,HttpStatus.BAD_REQUEST);
+            throw new EmployeeAlreadyExistsException(Constant.EMPLOYEE_NOT_FOUND_ERROR);
         }
         try {
             long startTime=System.currentTimeMillis();
@@ -93,7 +98,7 @@ public class EmployeesServiceImpl implements EmployeesService {
             logger.info("end delete employee, elapsedTime: {} ms",System.currentTimeMillis()-startTime);
 
         }catch (Exception e){
-            throw new BusinesstException(Constant.ERROR_DURING_DELETE_EMPLOYEE,HttpStatus.NOT_FOUND);
+            throw new EmployeeGlobalException(Constant.ERROR_DURING_DELETE_EMPLOYEE);
         }
         Response<String> response=new Response<>();
         response.setResult(Constant.EMPLOYEE_IS_DELETED);
@@ -105,7 +110,7 @@ public class EmployeesServiceImpl implements EmployeesService {
         EmployeesEntity  employeesEntity=employeesRepository.getEmployeesEntityById(employeeRequestDto.getId());
         logger.info("Employee is Null : {}",employeesEntity == null);
         if (employeesEntity == null ) {
-            throw new BusinesstException(Constant.EMPLOYEE_NOT_FOUND_ERROR,HttpStatus.BAD_REQUEST);
+            throw new EmployeeNotFoundException(Constant.EMPLOYEE_NOT_FOUND_ERROR);
         }
         Response<EmployeeDto> response=new Response<>();
         try {
@@ -117,7 +122,7 @@ public class EmployeesServiceImpl implements EmployeesService {
             logger.info("end Edit employee, elapsedTime: {} ms",System.currentTimeMillis()-startTime);
 
         }catch (Exception e){
-            throw new BusinesstException(Constant.ERROR_DURING_EDIT_EMPLOYEE,HttpStatus.NOT_FOUND);
+            throw new EmployeeGlobalException(Constant.ERROR_DURING_EDIT_EMPLOYEE);
         }
         return response;
     }
